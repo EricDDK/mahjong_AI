@@ -418,7 +418,7 @@ namespace mahjongAI
 
         public static void main()
         {
-            if (true)
+            if (false)
             {
                 Console.WriteLine("11111111");
                 AITableJian.gen();
