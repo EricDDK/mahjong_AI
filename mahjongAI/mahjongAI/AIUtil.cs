@@ -92,7 +92,6 @@ namespace mahjongAI
                     result = d;
                 }
             }
-            var v = ret.Select((m, index) => new { index, m }).OrderByDescending(n => n.m).Take(1);
             return result;
         }
 
@@ -133,7 +132,7 @@ namespace mahjongAI
             {
                 if (cache[c] == 0)
                 {
-                    if (!guiCard.Contains(c) && remainCards[c] > 0 && !bannedCards.Contains(c))
+                    if (!guiCard.Contains(c) && !bannedCards.Contains(c))
                     {
                         List<int> tmp = new List<int>(input);
                         tmp.Remove(c);
@@ -304,6 +303,7 @@ namespace mahjongAI
                 1, 1, 1, 1, 1, 1, 1, 1};
             List<int> bannedCards = new List<int>();
             int outRet = outAI(cards, gui, remain, bannedCards);
+            int outDRet = AIDynamicCommon.outAI(cards, gui, remain, bannedCards);
             Console.WriteLine(MaJiangDef.cardToString(outRet));
         }
 
@@ -418,6 +418,15 @@ namespace mahjongAI
 
         public static void main()
         {
+            if (true)
+            {
+                Console.WriteLine("11111111");
+                AITableJian.gen();
+                AITableFeng.gen();
+                Console.WriteLine("22222222");
+                AITable.gen();
+                Console.WriteLine("33333333");
+            }
             testOut();
             testChi();
             testPeng();
