@@ -358,8 +358,8 @@ namespace mahjongAI
             }
 
             AIInfo aiInfo = new AIInfo();
-            aiInfo.inputNum = (byte)inputNum;
-            aiInfo.jiang = (byte)jiang;
+            aiInfo.inputNum = (int)inputNum;
+            aiInfo.jiang = (int)jiang;
             aiInfos.Add(aiInfo);
         }
 

@@ -7,8 +7,8 @@ namespace mahjongAI
 {
     public class AIInfo
     {
-        public byte inputNum;
-        public byte jiang;
+        public int inputNum;
+        public int jiang;
 
         public bool equals(object o)
         {

@@ -7,9 +7,9 @@ namespace mahjongAI
 {
     public class HuInfo
     {
-        public byte needGui;
-        public byte jiang;
-        public byte hupai;
+        public int needGui;
+        public int jiang;
+        public int hupai;
 
         public string toString()
         {

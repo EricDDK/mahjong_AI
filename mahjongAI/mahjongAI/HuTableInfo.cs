@@ -7,9 +7,9 @@ namespace mahjongAI
 {
     public class HuTableInfo
     {
-        public byte needGui;
+        public int needGui;
         public bool jiang;
-        public byte[] hupai = new byte[9];
+        public int[] hupai = new int[9];
 
         public string toString()
         {
@@ -21,7 +21,7 @@ namespace mahjongAI
             }
             else
             {
-                foreach (byte i in hupai)
+                foreach (int i in hupai)
                 {
                     if (i > 0)
                     {

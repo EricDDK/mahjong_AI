@@ -249,7 +249,7 @@ namespace mahjongAI
 
                     if (!max)
                     {
-                        check_ai(aiInfos, num, -1, inputNum);
+                        check_ai(aiInfos, num, 128, inputNum);
                         valid++;
                     }
 
@@ -261,14 +261,14 @@ namespace mahjongAI
 
                 foreach (AIInfo aiInfo in aiInfos)
                 {
-                    key = aiInfo.jiang != -1 ? 1 : 0;
+                    key = aiInfo.jiang != 128 ? 1 : 0;
                     if (aiInfo.inputNum == 0)
                     {
                         aiTableInfos[key].p = 1;
                     }
                     if (aiTableInfos[key].p != 1)
                     {
-                        key = aiInfo.jiang != -1 ? 1 : 0;
+                        key = aiInfo.jiang != 128 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
                     }
                 }
@@ -306,7 +306,7 @@ namespace mahjongAI
 
             for (int i = 0; i < N; i++)
             {
-                if (num[i] >= 2 && jiang == -1)
+                if (num[i] >= 2 && jiang == 128)
                 {
                     num[i] -= 2;
                     check_ai(aiInfos, num, i, inputNum);
@@ -333,8 +333,8 @@ namespace mahjongAI
             }
 
             AIInfo aiInfo = new AIInfo();
-            aiInfo.inputNum = (byte)inputNum;
-            aiInfo.jiang = (byte)jiang;
+            aiInfo.inputNum = (int)inputNum;
+            aiInfo.jiang = (int)jiang;
             aiInfos.Add(aiInfo);
         }
 

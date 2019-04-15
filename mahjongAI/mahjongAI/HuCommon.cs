@@ -59,15 +59,15 @@ namespace mahjongAI
                         table[key] = huTableInfos;
                     }
 
-                    byte[] num = new byte[N];
+                    int[] num = new int[N];
                     long tmp = hu;
                     for (int i = 0; i < N; i++)
                     {
-                        num[N - 1 - i] = (byte)(tmp % 10);
+                        num[N - 1 - i] = (int)(tmp % 10);
                         tmp = tmp / 10;
                     }
                     HuTableInfo huTableInfo = new HuTableInfo();
-                    huTableInfo.needGui = (byte)gui;
+                    huTableInfo.needGui = (int)gui;
                     huTableInfo.jiang = jiang != 0;
                     huTableInfo.hupai = hu == -1 ? null : num;
                     huTableInfos.Add(huTableInfo);
