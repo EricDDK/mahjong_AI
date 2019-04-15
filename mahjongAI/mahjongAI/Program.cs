@@ -11,7 +11,7 @@ namespace mahjongAI
         static void Main(string[] args)
         {
             AIEntry.RegisterAI();  // register the AI module
-            AIDynamicCommon.Register();
+            AICommonDynamic.Register();
             AIUtil.main();  // test case
 
             Console.ReadLine();

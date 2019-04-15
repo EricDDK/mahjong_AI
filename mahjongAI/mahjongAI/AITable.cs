@@ -14,37 +14,37 @@ namespace mahjongAI
 
         public static void gen()
         {
-            AICommon.table = table;
-            AICommon.N = 9;
-            AICommon.NAME = "normal";
-            AICommon.CARD = names;
-            AICommon.huLian = true;
-            AICommon.baseP = 36.0d / 136;
-            AICommon.gen();
+            AICommonStatic.table = table;
+            AICommonStatic.N = 9;
+            AICommonStatic.NAME = "normal";
+            AICommonStatic.CARD = names;
+            AICommonStatic.huLian = true;
+            AICommonStatic.baseP = 36.0d / 136;
+            AICommonStatic.gen();
         }
 
         public static void load()
         {
             table.Clear();
-            AICommon.table = table;
-            AICommon.N = 9;
-            AICommon.NAME = "normal";
-            AICommon.CARD = names;
-            AICommon.huLian = true;
-            AICommon.baseP = 36.0d / 136;
-            AICommon.load();
+            AICommonStatic.table = table;
+            AICommonStatic.N = 9;
+            AICommonStatic.NAME = "normal";
+            AICommonStatic.CARD = names;
+            AICommonStatic.huLian = true;
+            AICommonStatic.baseP = 36.0d / 136;
+            AICommonStatic.load();
         }
 
         public static void load(List<string> lines)
         {
             table.Clear();
-            AICommon.table = table;
-            AICommon.N = 9;
-            AICommon.NAME = "normal";
-            AICommon.CARD = names;
-            AICommon.huLian = true;
-            AICommon.baseP = 36.0d / 136;
-            AICommon.load(lines);
+            AICommonStatic.table = table;
+            AICommonStatic.N = 9;
+            AICommonStatic.NAME = "normal";
+            AICommonStatic.CARD = names;
+            AICommonStatic.huLian = true;
+            AICommonStatic.baseP = 36.0d / 136;
+            AICommonStatic.load(lines);
         }
     }
 }

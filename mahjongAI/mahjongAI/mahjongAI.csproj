@@ -44,8 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AICheck.cs" />
-    <Compile Include="AICommon.cs" />
-    <Compile Include="AIDynamicCommon.cs" />
+    <Compile Include="AICommonStatic.cs" />
+    <Compile Include="AICommonDynamic.cs" />
     <Compile Include="AIEntry.cs" />
     <Compile Include="AIInfo.cs" />
     <Compile Include="AITable.cs" />

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace mahjongAI
 {
-    public class AICommon
+    public class AICommonStatic
     {
         public static ConcurrentDictionary<long, List<AITableInfo>> table;
         public static int N;

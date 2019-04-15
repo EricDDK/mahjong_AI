@@ -14,37 +14,37 @@ namespace mahjongAI
 
         public static void gen()
         {
-            AICommon.table = table;
-            AICommon.N = 4;
-            AICommon.NAME = "feng";
-            AICommon.CARD = ziname;
-            AICommon.huLian = false;
-            AICommon.baseP = 16.0d / 136;
-            AICommon.gen();
+            AICommonStatic.table = table;
+            AICommonStatic.N = 4;
+            AICommonStatic.NAME = "feng";
+            AICommonStatic.CARD = ziname;
+            AICommonStatic.huLian = false;
+            AICommonStatic.baseP = 16.0d / 136;
+            AICommonStatic.gen();
         }
 
         public static void load()
         {
             table.Clear();
-            AICommon.table = table;
-            AICommon.N = 4;
-            AICommon.NAME = "feng";
-            AICommon.CARD = ziname;
-            AICommon.huLian = false;
-            AICommon.baseP = 16.0d / 136;
-            AICommon.load();
+            AICommonStatic.table = table;
+            AICommonStatic.N = 4;
+            AICommonStatic.NAME = "feng";
+            AICommonStatic.CARD = ziname;
+            AICommonStatic.huLian = false;
+            AICommonStatic.baseP = 16.0d / 136;
+            AICommonStatic.load();
         }
 
         public static void load(List<string> lines)
         {
             table.Clear();
-            AICommon.table = table;
-            AICommon.N = 4;
-            AICommon.NAME = "feng";
-            AICommon.CARD = ziname;
-            AICommon.huLian = false;
-            AICommon.baseP = 16.0d / 136;
-            AICommon.load(lines);
+            AICommonStatic.table = table;
+            AICommonStatic.N = 4;
+            AICommonStatic.NAME = "feng";
+            AICommonStatic.CARD = ziname;
+            AICommonStatic.huLian = false;
+            AICommonStatic.baseP = 16.0d / 136;
+            AICommonStatic.load(lines);
         }
     }
 }

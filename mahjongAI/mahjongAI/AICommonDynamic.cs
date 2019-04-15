@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace mahjongAI
 {
-    public class AIDynamicCommon
+    public class AICommonDynamic
     {
         public static Dictionary<int, HashSet<long>> _everyNormalCards = new Dictionary<int, HashSet<long>>();
         public static Dictionary<int, HashSet<long>> _everyFengCards = new Dictionary<int, HashSet<long>>();
