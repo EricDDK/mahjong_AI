@@ -52,6 +52,7 @@
     <Compile Include="AITableFeng.cs" />
     <Compile Include="AITableInfo.cs" />
     <Compile Include="AITableJian.cs" />
+    <Compile Include="AITools.cs" />
     <Compile Include="AIUtil.cs" />
     <Compile Include="HuCommon.cs" />
     <Compile Include="HuInfo.cs" />

@@ -95,8 +95,7 @@ namespace mahjongAI
             return result;
         }
 
-        private static void calcAITableInfo(List<double> ret, List<List<AITableInfo>> tmp, int index, bool jiang,
-                double cur)
+        private static void calcAITableInfo(List<double> ret, List<List<AITableInfo>> tmp, int index, bool jiang, double cur)
         {
             if (index >= tmp.Count)
             {
@@ -303,7 +302,9 @@ namespace mahjongAI
                 1, 1, 1, 1, 1, 1, 1, 1};
             List<int> bannedCards = new List<int>();
             int outRet = outAI(cards, gui, remain, bannedCards);
-            int outDRet = AIDynamicCommon.outAI(cards, gui, remain, bannedCards);
+            int outDynamicRet = AIDynamicCommon.outAI(cards, gui, remain, bannedCards);
+            if (outRet != outDynamicRet)
+                Console.WriteLine("[testOut] test failed ! ");
             Console.WriteLine(MaJiangDef.cardToString(outRet));
         }
 
@@ -313,10 +314,21 @@ namespace mahjongAI
             string guiStr = "1万";
             List<int> cards = MaJiangDef.stringToCards(init);
             List<int> gui = MaJiangDef.stringToCards(guiStr);
-
-            Console.WriteLine(chiAI(cards, gui, MaJiangDef.stringToCard("3筒"), MaJiangDef.stringToCard("2筒"),
-                    MaJiangDef.stringToCard("4筒")));
-            Console.WriteLine(MaJiangDef.cardsToString(chiAI(cards, gui, MaJiangDef.stringToCard("3筒"))));
+            bool canChi = chiAI(cards, gui, MaJiangDef.stringToCard("3筒"), MaJiangDef.stringToCard("2筒"), MaJiangDef.stringToCard("4筒"));
+            bool canDynamicChi = AIDynamicCommon.chiAI(cards, gui, MaJiangDef.stringToCard("3筒"), MaJiangDef.stringToCard("2筒"), MaJiangDef.stringToCard("4筒"));
+            if (canChi != canDynamicChi)
+                Console.WriteLine("[testChi] test failed 1 ! ");
+            Console.WriteLine(string.Format("[testChi] canPeng = {0}", canChi));
+            List<int> chiCards = chiAI(cards, gui, MaJiangDef.stringToCard("3筒"));
+            List<int> dynamicChiCards = chiAI(cards, gui, MaJiangDef.stringToCard("3筒"));
+            if (chiCards.Count != dynamicChiCards.Count)
+                Console.WriteLine("[testChi] test failed 3 ! ");
+            for (int i = 0; i < chiCards.Count; ++i)
+            {
+                if (chiCards[i] != dynamicChiCards[i])
+                    Console.WriteLine("[testChi] test failed 2 ! ");
+            }   
+            Console.WriteLine(MaJiangDef.cardsToString(chiCards));
         }
 
         public static void testPeng()
@@ -325,8 +337,11 @@ namespace mahjongAI
             string guiStr = "1万";
             List<int> cards = MaJiangDef.stringToCards(init);
             List<int> gui = MaJiangDef.stringToCards(guiStr);
-
-            Console.WriteLine(pengAI(cards, gui, MaJiangDef.stringToCard("2万"), 0.0d));
+            bool canPeng = pengAI(cards, gui, MaJiangDef.stringToCard("2万"), 0.0d);
+            bool canDynamicPeng = AIDynamicCommon.pengAI(cards, gui, MaJiangDef.stringToCard("2万"), 0.0d);
+            if (canPeng != canDynamicPeng)
+                Console.WriteLine("[testPeng] test failed ! ");
+            Console.WriteLine(string.Format("[testPeng] canPeng = {0}", canPeng));
         }
 
         public static void testGang()
@@ -335,8 +350,11 @@ namespace mahjongAI
             string guiStr = "1万";
             List<int> cards = MaJiangDef.stringToCards(init);
             List<int> gui = MaJiangDef.stringToCards(guiStr);
-
-            Console.WriteLine(gangAI(cards, gui, MaJiangDef.stringToCard("2万"), 1.0d));
+            bool canGang = gangAI(cards, gui, MaJiangDef.stringToCard("2万"), 1.0d);
+            bool canDynamicPeng = AIDynamicCommon.gangAI(cards, gui, MaJiangDef.stringToCard("2万"), 1.0d);
+            if (canGang != canDynamicPeng)
+                Console.WriteLine("[testGang] test failed ! ");
+            Console.WriteLine(string.Format("[testGang] canGang = {0}", canGang));
         }
 
         public static void gen()

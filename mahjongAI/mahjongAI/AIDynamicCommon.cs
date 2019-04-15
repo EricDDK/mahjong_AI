@@ -12,42 +12,36 @@ namespace mahjongAI
         public static Dictionary<int, HashSet<long>> _everyFengCards = new Dictionary<int, HashSet<long>>();
         public static Dictionary<int, HashSet<long>> _everyJianCards = new Dictionary<int, HashSet<long>>();
 
-        public static int N;
-        public static string NAME;
-        public static string[] CARD;
-        public static bool huLian;
-        public static double baseP;
-        public const int LEVEL = 5;
+        private static int N;
 
-        const double DMIN = 0.0000000000001d;
+        public const int LEVEL = 5;
 
         public static void Register()
         {
-            for (int inputNum = 0; inputNum <= AICommon.LEVEL; inputNum++)
+            for (int inputNum = 0; inputNum <= LEVEL; inputNum++)
             {
-                AICommon.N = 4;
-                int[] tmpnum = new int[AICommon.N];
+                N = 4;
+                int[] tmpnum = new int[N];
                 HashSet<long> tmpcard = new HashSet<long>();
-                AICommon.gen_card(tmpcard, tmpnum, 0, inputNum);
+                gen_card(tmpcard, tmpnum, 0, inputNum);
                 _everyFengCards[inputNum] = tmpcard;
             }
-            for (int inputNum = 0; inputNum <= AICommon.LEVEL; inputNum++)
+            for (int inputNum = 0; inputNum <= LEVEL; inputNum++)
             {
-                AICommon.N = 3;
-                int[] tmpnum = new int[AICommon.N];
+                N = 3;
+                int[] tmpnum = new int[N];
                 HashSet<long> tmpcard = new HashSet<long>();
-                AICommon.gen_card(tmpcard, tmpnum, 0, inputNum);
+                gen_card(tmpcard, tmpnum, 0, inputNum);
                 _everyJianCards[inputNum] = tmpcard;
             }
-            for (int inputNum = 0; inputNum <= AICommon.LEVEL; inputNum++)
+            for (int inputNum = 0; inputNum <= LEVEL; inputNum++)
             {
-                AICommon.N = 9;
-                int[] tmpnum = new int[AICommon.N];
+                N = 9;
+                int[] tmpnum = new int[N];
                 HashSet<long> tmpcard = new HashSet<long>();
-                AICommon.gen_card(tmpcard, tmpnum, 0, inputNum);
+                gen_card(tmpcard, tmpnum, 0, inputNum);
                 _everyNormalCards[inputNum] = tmpcard;
             }
-            int a = 1;
         }
 
         public static int outAI(List<int> input, List<int> guiCard, int[] remainCards, List<int> bannedCards)
@@ -74,6 +68,145 @@ namespace mahjongAI
                 cache[c] = 1;
             }
             return ret;
+        }
+
+        public static bool chiAI(List<int> input, List<int> guiCard, int card, int card1, int card2)
+        {
+            if (guiCard.Contains(card) || guiCard.Contains(card1) || guiCard.Contains(card2))
+            {
+                return false;
+            }
+
+            if (!input.Contains(card1) || !input.Contains(card2))
+            {
+                return false;
+            }
+
+            double score = calc(input, guiCard);
+
+            List<int> tmp = new List<int>(input);
+            tmp.Remove(card1);
+            tmp.Remove(card2);
+            double scoreNew = calc(tmp, guiCard);
+
+            return scoreNew >= score;
+        }
+
+        public static List<int> chiAI(List<int> input, List<int> guiCard, int card)
+        {
+            List<int> ret = new List<int>();
+            if (guiCard.Contains(card))
+            {
+                return ret;
+            }
+
+            double score = calc(input, guiCard);
+            double scoreNewMax = 0;
+
+            int card1 = 0;
+            int card2 = 0;
+
+            if (getHasCount(input, card - 2) > 0 && getHasCount(input, card - 1) > 0
+                    && MaJiangDef.type(card) == MaJiangDef.type(card - 2)
+                    && MaJiangDef.type(card) == MaJiangDef.type(card - 1))
+            {
+                List<int> tmp = new List<int>(input);
+                tmp.Remove((int)(card - 2));
+                tmp.Remove((int)(card - 1));
+                double scoreNew = calc(tmp, guiCard);
+                if (scoreNew > scoreNewMax)
+                {
+                    scoreNewMax = scoreNew;
+                    card1 = card - 2;
+                    card2 = card - 1;
+                }
+            }
+
+            if (getHasCount(input, card - 1) > 0 && getHasCount(input, card + 1) > 0
+                    && MaJiangDef.type(card) == MaJiangDef.type(card - 1)
+                    && MaJiangDef.type(card) == MaJiangDef.type(card + 1))
+            {
+                List<int> tmp = new List<int>(input);
+                tmp.Remove((int)(card - 1));
+                tmp.Remove((int)(card + 1));
+                double scoreNew = calc(tmp, guiCard);
+                if (scoreNew > scoreNewMax)
+                {
+                    scoreNewMax = scoreNew;
+                    card1 = card - 1;
+                    card2 = card + 1;
+                }
+            }
+
+            if (getHasCount(input, card + 1) > 0 && getHasCount(input, card + 2) > 0
+                    && MaJiangDef.type(card) == MaJiangDef.type(card + 1)
+                    && MaJiangDef.type(card) == MaJiangDef.type(card + 2))
+            {
+                List<int> tmp = new List<int>(input);
+                tmp.Remove((int)(card + 1));
+                tmp.Remove((int)(card + 2));
+                double scoreNew = calc(tmp, guiCard);
+                if (scoreNew > scoreNewMax)
+                {
+                    scoreNewMax = scoreNew;
+                    card1 = card + 1;
+                    card2 = card + 2;
+                }
+            }
+
+            if (scoreNewMax > score)
+            {
+                ret.Add(card1);
+                ret.Add(card2);
+            }
+
+            return ret;
+        }
+
+        public static bool pengAI(List<int> input, List<int> guiCard, int card, double award)
+        {
+            if (guiCard.Contains(card))
+            {
+                return false;
+            }
+
+            if (getHasCount(input, card) < 2)
+            {
+                return false;
+            }
+
+            double score = calc(input, guiCard);
+
+            List<int> tmp = new List<int>(input);
+            tmp.Remove((int)card);
+            tmp.Remove((int)card);
+            double scoreNew = calc(tmp, guiCard);
+
+            return scoreNew + award >= score;
+        }
+
+        public static bool gangAI(List<int> input, List<int> guiCard, int card, double award)
+        {
+            if (guiCard.Contains(card))
+            {
+                return false;
+            }
+
+            if (getHasCount(input, card) < 3)
+            {
+                return false;
+            }
+
+            double score = calc(input, guiCard);
+
+            List<int> tmp = new List<int>(input);
+            tmp.Remove((int)card);
+            tmp.Remove((int)card);
+            tmp.Remove((int)card);
+            tmp.Remove((int)card);
+            double scoreNew = calc(tmp, guiCard);
+
+            return scoreNew + award >= score;
         }
 
         public static double calc(List<int> input, List<int> guiCard)
@@ -133,30 +266,29 @@ namespace mahjongAI
                 jian_key = jian_key * 10 + num;
             }
 
-            int ttt = 10000000;
-            //List<AITableInfo> t1 = AITable.table[ttt];
-            List<AITableInfo> t2 = getAITable(ttt, _everyNormalCards);
+            AIProperty property;
+            property.N = 9; property.baseP = 36.0d / 136; property.huLian = true;
+            List<List<AITableInfo>> dynamicMaxPossible = new List<List<AITableInfo>>();
 
-            List<List<AITableInfo>> tmp = new List<List<AITableInfo>>();
+            List<AITableInfo> dynamicWanAITableInfo = getAITable(wan_key, _everyNormalCards, property);
+            dynamicMaxPossible.Add(dynamicWanAITableInfo);
 
-            List<AITableInfo> wanAITableInfo = AITable.table[wan_key];
-            tmp.Add(wanAITableInfo);
-            List<AITableInfo> dynamicWanAITableInfo = getAITable(wan_key, _everyNormalCards);
+            List<AITableInfo> dynamicTongAITableInfo = getAITable(tong_key, _everyNormalCards, property);
+            dynamicMaxPossible.Add(dynamicTongAITableInfo);
 
-            List<AITableInfo> tongAITableInfo = AITable.table[tong_key];
-            tmp.Add(tongAITableInfo);
+            List<AITableInfo> dynamicTiaoAITableInfo = getAITable(tiao_key, _everyNormalCards, property);
+            dynamicMaxPossible.Add(dynamicTiaoAITableInfo);
 
-            List<AITableInfo> tiaoAITableInfo = AITable.table[tiao_key];
-            tmp.Add(tiaoAITableInfo);
+            property.N = 4; property.baseP = 16.0d / 136; property.huLian = false;
+            List<AITableInfo> dynamicFengAITableInfo = getAITable(feng_key, _everyFengCards, property);
+            dynamicMaxPossible.Add(dynamicFengAITableInfo);
 
-            List<AITableInfo> fengAITableInfo = AITableFeng.table[feng_key];
-            tmp.Add(fengAITableInfo);
-
-            List<AITableInfo> jianAITableInfo = AITableJian.table[jian_key];
-            tmp.Add(jianAITableInfo);
+            property.N = 3; property.baseP = 12.0d / 136; property.huLian = false;
+            List<AITableInfo> dynamicJianAITableInfo = getAITable(jian_key, _everyJianCards, property);
+            dynamicMaxPossible.Add(dynamicJianAITableInfo);
 
             List<double> ret = new List<double>();
-            calcAITableInfo(ret, tmp, 0, false, 0.0d);
+            calcAITableInfo(ret, dynamicMaxPossible, 0, false, 0.0d);
 
             double result = 0.0d;
             foreach (double d in ret)
@@ -196,11 +328,10 @@ namespace mahjongAI
             }
         }
 
-        public static List<AITableInfo> getAITable(long card, Dictionary<int, HashSet<long>> tmpcards)
+        public static List<AITableInfo> getAITable(long card, Dictionary<int, HashSet<long>> tmpcards, AIProperty property)
         {
-            int N = 9;
-            double baseP = 36.0d / 136;
-
+            int N = property.N;
+            double baseP = property.baseP;
             int[] num = new int[N];
             long tmp = card;
             for (int i = 0; i < N; i++)
@@ -228,7 +359,7 @@ namespace mahjongAI
             key = aiTableInfo.jiang ? 1 : 0;
             aiTableInfos[key] = aiTableInfo;
 
-            for (int inputNum = 0; inputNum <= AICommon.LEVEL; inputNum++)
+            for (int inputNum = 0; inputNum <= LEVEL; inputNum++)
             {
                 HashSet<long> tmpcard = tmpcards[inputNum];
 
@@ -258,7 +389,7 @@ namespace mahjongAI
 
                     if (!max)
                     {
-                        check_ai(aiInfos, num, -1, inputNum);
+                        check_ai(aiInfos, num, -1, inputNum, property);
                         valid++;
                     }
 
@@ -276,8 +407,8 @@ namespace mahjongAI
                         aiTableInfos[key].p = 1.0d;
                     }
                     //if (aiTableInfos[key].p != 1)
-                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > DMIN)
-                        {
+                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > double.MinValue)
+                    {
                         key = aiInfo.jiang != -1 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
                     }
@@ -292,11 +423,10 @@ namespace mahjongAI
             return tmpAI;
         }
 
-        public static void check_ai(HashSet<AIInfo> aiInfos, int[] num, int jiang, int inputNum)
+        public static void check_ai(HashSet<AIInfo> aiInfos, int[] num, int jiang, int inputNum, AIProperty property)
         {
-            bool huLian = true;
-            int N = 9;
-
+            bool huLian = property.huLian;
+            int N = property.N;
             if (huLian)
             {
                 for (int i = 0; i < N; i++)
@@ -306,7 +436,7 @@ namespace mahjongAI
                         num[i]--;
                         num[i + 1]--;
                         num[i + 2]--;
-                        check_ai(aiInfos, num, jiang, inputNum);
+                        check_ai(aiInfos, num, jiang, inputNum, property);
                         num[i]++;
                         num[i + 1]++;
                         num[i + 2]++;
@@ -319,7 +449,7 @@ namespace mahjongAI
                 if (num[i] >= 2 && jiang == -1)
                 {
                     num[i] -= 2;
-                    check_ai(aiInfos, num, i, inputNum);
+                    check_ai(aiInfos, num, i, inputNum, property);
                     num[i] += 2;
                 }
             }
@@ -329,7 +459,7 @@ namespace mahjongAI
                 if (num[i] >= 3)
                 {
                     num[i] -= 3;
-                    check_ai(aiInfos, num, jiang, inputNum);
+                    check_ai(aiInfos, num, jiang, inputNum, property);
                     num[i] += 3;
                 }
             }
@@ -350,7 +480,6 @@ namespace mahjongAI
 
         public static void gen_card(HashSet<long> card, int[] num, int index, int total)
         {
-            int N = 9;
             if (index == N - 1)
             {
                 if (total > 4)
@@ -381,5 +510,24 @@ namespace mahjongAI
             }
         }
 
+        private static int getHasCount(List<int> input, int obj)
+        {
+            int result = 0;
+            foreach (int i in input)
+            {
+                if (i == obj)
+                    ++result;
+            }
+            return result;
+        }
+
     }
+
+    public struct AIProperty
+    {
+        public int N;
+        public double baseP;
+        public bool huLian;
+    }
+
 }

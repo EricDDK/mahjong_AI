@@ -16,8 +16,6 @@ namespace mahjongAI
         public static double baseP;
         public const int LEVEL = 5;
 
-        const double DMIN = 0.0000000000001d;
-
         public static void load()
         {
             try
@@ -125,100 +123,6 @@ namespace mahjongAI
                     result.Add(str);
                 }
             }
-            int a = 1;
-        }
-
-        public static List<AITableInfo> getAITable(long card, Dictionary<int, HashSet<long>> tmpcards)
-        {
-            int[] num = new int[N];
-            long tmp = card;
-            for (int i = 0; i < N; i++)
-            {
-                num[N - 1 - i] = (int)(tmp % 10);
-                tmp = tmp / 10;
-            }
-
-            int total = 0;
-            for (int i = 0; i < N; i++)
-            {
-                total += num[i];
-            }
-
-            Dictionary<int, AITableInfo> aiTableInfos = new Dictionary<int, AITableInfo>();
-
-            AITableInfo aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0.0d;
-            aiTableInfo.jiang = true;
-            int key = aiTableInfo.jiang ? 1 : 0;
-            aiTableInfos[key] = aiTableInfo;
-            aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0.0d;
-            aiTableInfo.jiang = false;
-            key = aiTableInfo.jiang ? 1 : 0;
-            aiTableInfos[key] = aiTableInfo;
-
-            for (int inputNum = 0; inputNum <= LEVEL; inputNum++)
-            {
-                HashSet<long> tmpcard = tmpcards[inputNum];
-
-                HashSet<AIInfo> aiInfos = new HashSet<AIInfo>();
-
-                int valid = 0;
-
-                foreach (long tmpc in tmpcard)
-                {
-                    int[] tmpcnum = new int[N];
-                    long tt = tmpc;
-                    for (int i = 0; i < N; i++)
-                    {
-                        tmpcnum[N - 1 - i] = (int)(tt % 10);
-                        tt = tt / 10;
-                    }
-
-                    bool max = false;
-                    for (int i = 0; i < N; i++)
-                    {
-                        num[i] += tmpcnum[i];
-                        if (num[i] > 4)
-                        {
-                            max = true;
-                        }
-                    }
-
-                    if (!max)
-                    {
-                        check_ai(aiInfos, num, -1, inputNum);
-                        valid++;
-                    }
-
-                    for (int i = 0; i < N; i++)
-                    {
-                        num[i] -= tmpcnum[i];
-                    }
-                }
-
-                foreach (AIInfo aiInfo in aiInfos)
-                {
-                    key = aiInfo.jiang != -1 ? 1 : 0;
-                    if (aiInfo.inputNum == 0)
-                    {
-                        aiTableInfos[key].p = 1.0d;
-                    }
-                    //if (aiTableInfos[key].p != 1)
-                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > DMIN)
-                    {
-                        key = aiInfo.jiang != -1 ? 1 : 0;
-                        aiTableInfos[key].p += baseP * 1.0d / valid;
-                    }
-                }
-            }
-
-            List<AITableInfo> tmpAI = new List<AITableInfo>();
-            foreach (var o in aiTableInfos.Values)
-            {
-                tmpAI.Add(o);
-            }
-            return tmpAI;
         }
 
         public static void check_ai(long card, Dictionary<int, HashSet<long>> tmpcards)
@@ -298,7 +202,7 @@ namespace mahjongAI
                         aiTableInfos[key].p = 1.0d;
                     }
                     //if (aiTableInfos[key].p != 1)
-                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > DMIN)
+                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > double.MinValue)
                     {
                         key = aiInfo.jiang != -1 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
