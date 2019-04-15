@@ -389,7 +389,7 @@ namespace mahjongAI
 
                     if (!max)
                     {
-                        check_ai(aiInfos, num, -1, inputNum, property);
+                        checkAI(aiInfos, num, -1, inputNum, property);
                         valid++;
                     }
 
@@ -407,7 +407,7 @@ namespace mahjongAI
                         aiTableInfos[key].p = 1.0d;
                     }
                     //if (aiTableInfos[key].p != 1)
-                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > double.MinValue)
+                    if (aiTableInfos[key].p != 1)
                     {
                         key = aiInfo.jiang != -1 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
@@ -423,7 +423,7 @@ namespace mahjongAI
             return tmpAI;
         }
 
-        public static void check_ai(HashSet<AIInfo> aiInfos, int[] num, int jiang, int inputNum, AIProperty property)
+        public static void checkAI(HashSet<AIInfo> aiInfos, int[] num, int jiang, int inputNum, AIProperty property)
         {
             bool huLian = property.huLian;
             int N = property.N;
@@ -436,7 +436,7 @@ namespace mahjongAI
                         num[i]--;
                         num[i + 1]--;
                         num[i + 2]--;
-                        check_ai(aiInfos, num, jiang, inputNum, property);
+                        checkAI(aiInfos, num, jiang, inputNum, property);
                         num[i]++;
                         num[i + 1]++;
                         num[i + 2]++;
@@ -449,7 +449,7 @@ namespace mahjongAI
                 if (num[i] >= 2 && jiang == -1)
                 {
                     num[i] -= 2;
-                    check_ai(aiInfos, num, i, inputNum, property);
+                    checkAI(aiInfos, num, i, inputNum, property);
                     num[i] += 2;
                 }
             }
@@ -459,7 +459,7 @@ namespace mahjongAI
                 if (num[i] >= 3)
                 {
                     num[i] -= 3;
-                    check_ai(aiInfos, num, jiang, inputNum, property);
+                    checkAI(aiInfos, num, jiang, inputNum, property);
                     num[i] += 3;
                 }
             }

@@ -97,7 +97,7 @@ namespace mahjongAI
             foreach (long l in card)
             {
                 index++;
-                check_ai(l, tmpcards);
+                checkAI(l, tmpcards);
                 output(l, null);
                 Console.WriteLine(index);
             }
@@ -125,7 +125,7 @@ namespace mahjongAI
             }
         }
 
-        public static void check_ai(long card, Dictionary<int, HashSet<long>> tmpcards)
+        public static void checkAI(long card, Dictionary<int, HashSet<long>> tmpcards)
         {
             int[] num = new int[N];
             long tmp = card;
@@ -184,7 +184,7 @@ namespace mahjongAI
 
                     if (!max)
                     {
-                        check_ai(aiInfos, num, -1, inputNum);
+                        checkAI(aiInfos, num, -1, inputNum);
                         valid++;
                     }
 
@@ -201,8 +201,7 @@ namespace mahjongAI
                     {
                         aiTableInfos[key].p = 1.0d;
                     }
-                    //if (aiTableInfos[key].p != 1)
-                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > double.MinValue)
+                    if (aiTableInfos[key].p != 1)
                     {
                         key = aiInfo.jiang != -1 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
@@ -218,7 +217,7 @@ namespace mahjongAI
             table[card] = tmpAI;
         }
 
-        public static void check_ai(HashSet<AIInfo> aiInfos, int[] num, int jiang, int inputNum)
+        public static void checkAI(HashSet<AIInfo> aiInfos, int[] num, int jiang, int inputNum)
         {
             if (huLian)
             {
@@ -229,7 +228,7 @@ namespace mahjongAI
                         num[i]--;
                         num[i + 1]--;
                         num[i + 2]--;
-                        check_ai(aiInfos, num, jiang, inputNum);
+                        checkAI(aiInfos, num, jiang, inputNum);
                         num[i]++;
                         num[i + 1]++;
                         num[i + 2]++;
@@ -242,7 +241,7 @@ namespace mahjongAI
                 if (num[i] >= 2 && jiang == -1)
                 {
                     num[i] -= 2;
-                    check_ai(aiInfos, num, i, inputNum);
+                    checkAI(aiInfos, num, i, inputNum);
                     num[i] += 2;
                 }
             }
@@ -252,7 +251,7 @@ namespace mahjongAI
                 if (num[i] >= 3)
                 {
                     num[i] -= 3;
-                    check_ai(aiInfos, num, jiang, inputNum);
+                    checkAI(aiInfos, num, jiang, inputNum);
                     num[i] += 3;
                 }
             }

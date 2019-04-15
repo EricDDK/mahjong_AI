@@ -10,7 +10,7 @@ namespace mahjongAI
     {
         static void Main(string[] args)
         {
-            AIEntry.RegisterAI();  // register the AI module
+            //AIEntry.RegisterAI();  // register the AI module
             AICommonDynamic.Register();
             AIUtil.main();  // test case
 

@@ -301,11 +301,18 @@ namespace mahjongAI
                 4, 4, 4,
                 1, 1, 1, 1, 1, 1, 1, 1};
             List<int> bannedCards = new List<int>();
-            int outRet = outAI(cards, gui, remain, bannedCards);
-            int outDynamicRet = AICommonDynamic.outAI(cards, gui, remain, bannedCards);
-            if (outRet != outDynamicRet)
-                Console.WriteLine("[testOut] test failed ! ");
-            Console.WriteLine(MaJiangDef.cardToString(outRet));
+            int outRet; int outDynamicRet;
+            //outRet = outAI(cards, gui, remain, bannedCards);
+            //outDynamicRet = AICommonDynamic.outAI(cards, gui, remain, bannedCards);
+            //if (outRet != outDynamicRet)
+            //    Console.WriteLine("[testOut] test failed ! ");
+            //Console.WriteLine(MaJiangDef.cardToString(outRet));
+
+            cards = new List<int> { 8, 13, 18, 18, 19, 20, 24, 24, 27, 27, 29, 29, 30, 31 };
+            gui = new List<int> { 11 };
+            //outRet = outAI(cards, gui, remain, bannedCards);
+            outDynamicRet = AICommonDynamic.outAI(cards, gui, remain, bannedCards);
+            int a = 1;
         }
 
         public static void testChi()

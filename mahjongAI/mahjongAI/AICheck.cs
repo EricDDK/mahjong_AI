@@ -33,7 +33,7 @@ namespace mahjongAI
         //    foreach (long l in card)
         //    {
         //        index++;
-        //        check_ai(l, tmpcards);
+        //        checkAI(l, tmpcards);
         //        output(l, null);
         //        Console.WriteLine(index);
         //    }
