@@ -10,7 +10,7 @@ namespace mahjongAI
         public int inputNum;
         public int jiang;
 
-        public bool equals(object o)
+        public override bool Equals(object o)
         {
             if (this == o)
                 return true;
@@ -26,7 +26,8 @@ namespace mahjongAI
             return true;
         }
 
-        public int hashCode()
+        // HashSet deduplication
+        public override int GetHashCode()
         {
             int result = inputNum;
             result = 31 * result + jiang;

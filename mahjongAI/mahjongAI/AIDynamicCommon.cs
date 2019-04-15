@@ -12,6 +12,15 @@ namespace mahjongAI
         public static Dictionary<int, HashSet<long>> _everyFengCards = new Dictionary<int, HashSet<long>>();
         public static Dictionary<int, HashSet<long>> _everyJianCards = new Dictionary<int, HashSet<long>>();
 
+        public static int N;
+        public static string NAME;
+        public static string[] CARD;
+        public static bool huLian;
+        public static double baseP;
+        public const int LEVEL = 5;
+
+        const double DMIN = 0.0000000000001d;
+
         public static void Register()
         {
             for (int inputNum = 0; inputNum <= AICommon.LEVEL; inputNum++)
@@ -125,7 +134,7 @@ namespace mahjongAI
             }
 
             int ttt = 10000000;
-            List<AITableInfo> t1 = AITable.table[ttt];
+            //List<AITableInfo> t1 = AITable.table[ttt];
             List<AITableInfo> t2 = getAITable(ttt, _everyNormalCards);
 
             List<List<AITableInfo>> tmp = new List<List<AITableInfo>>();
@@ -209,12 +218,12 @@ namespace mahjongAI
             Dictionary<int, AITableInfo> aiTableInfos = new Dictionary<int, AITableInfo>();
 
             AITableInfo aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0;
+            aiTableInfo.p = 0.0d;
             aiTableInfo.jiang = true;
             int key = aiTableInfo.jiang ? 1 : 0;
             aiTableInfos[key] = aiTableInfo;
             aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0;
+            aiTableInfo.p = 0.0d;
             aiTableInfo.jiang = false;
             key = aiTableInfo.jiang ? 1 : 0;
             aiTableInfos[key] = aiTableInfo;
@@ -249,7 +258,7 @@ namespace mahjongAI
 
                     if (!max)
                     {
-                        check_ai(aiInfos, num, 128, inputNum);
+                        check_ai(aiInfos, num, -1, inputNum);
                         valid++;
                     }
 
@@ -261,14 +270,15 @@ namespace mahjongAI
 
                 foreach (AIInfo aiInfo in aiInfos)
                 {
-                    key = aiInfo.jiang != 128 ? 1 : 0;
+                    key = aiInfo.jiang != -1 ? 1 : 0;
                     if (aiInfo.inputNum == 0)
                     {
-                        aiTableInfos[key].p = 1;
+                        aiTableInfos[key].p = 1.0d;
                     }
-                    if (aiTableInfos[key].p != 1)
-                    {
-                        key = aiInfo.jiang != 128 ? 1 : 0;
+                    //if (aiTableInfos[key].p != 1)
+                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > DMIN)
+                        {
+                        key = aiInfo.jiang != -1 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
                     }
                 }
@@ -306,7 +316,7 @@ namespace mahjongAI
 
             for (int i = 0; i < N; i++)
             {
-                if (num[i] >= 2 && jiang == 128)
+                if (num[i] >= 2 && jiang == -1)
                 {
                     num[i] -= 2;
                     check_ai(aiInfos, num, i, inputNum);

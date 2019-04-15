@@ -16,7 +16,7 @@ namespace mahjongAI
             return "胡" + (hupai + 1) + " 将" + (jiang + 1) + " 鬼" + needGui;
         }
 
-        public bool equals(object o)
+        public override bool Equals(object o)
         {
             if (this == o)
                 return true;
@@ -34,7 +34,7 @@ namespace mahjongAI
             return true;
         }
 
-        public int hashCode()
+        public override int GetHashCode()
         {
             int result = needGui;
             result = 31 * result + jiang;

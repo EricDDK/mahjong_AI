@@ -16,6 +16,8 @@ namespace mahjongAI
         public static double baseP;
         public const int LEVEL = 5;
 
+        const double DMIN = 0.0000000000001d;
+
         public static void load()
         {
             try
@@ -145,12 +147,12 @@ namespace mahjongAI
             Dictionary<int, AITableInfo> aiTableInfos = new Dictionary<int, AITableInfo>();
 
             AITableInfo aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0;
+            aiTableInfo.p = 0.0d;
             aiTableInfo.jiang = true;
             int key = aiTableInfo.jiang ? 1 : 0;
             aiTableInfos[key] = aiTableInfo;
             aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0;
+            aiTableInfo.p = 0.0d;
             aiTableInfo.jiang = false;
             key = aiTableInfo.jiang ? 1 : 0;
             aiTableInfos[key] = aiTableInfo;
@@ -200,9 +202,10 @@ namespace mahjongAI
                     key = aiInfo.jiang != -1 ? 1 : 0;
                     if (aiInfo.inputNum == 0)
                     {
-                        aiTableInfos[key].p = 1;
+                        aiTableInfos[key].p = 1.0d;
                     }
-                    if (aiTableInfos[key].p != 1)
+                    //if (aiTableInfos[key].p != 1)
+                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > DMIN)
                     {
                         key = aiInfo.jiang != -1 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
@@ -237,12 +240,12 @@ namespace mahjongAI
             Dictionary<int, AITableInfo> aiTableInfos = new Dictionary<int, AITableInfo>();
 
             AITableInfo aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0;
+            aiTableInfo.p = 0.0d;
             aiTableInfo.jiang = true;
             int key = aiTableInfo.jiang ? 1 : 0;
             aiTableInfos[key] = aiTableInfo;
             aiTableInfo = new AITableInfo();
-            aiTableInfo.p = 0;
+            aiTableInfo.p = 0.0d;
             aiTableInfo.jiang = false;
             key = aiTableInfo.jiang ? 1 : 0;
             aiTableInfos[key] = aiTableInfo;
@@ -292,9 +295,10 @@ namespace mahjongAI
                     key = aiInfo.jiang != -1 ? 1 : 0;
                     if (aiInfo.inputNum == 0)
                     {
-                        aiTableInfos[key].p = 1;
+                        aiTableInfos[key].p = 1.0d;
                     }
-                    if (aiTableInfos[key].p != 1)
+                    //if (aiTableInfos[key].p != 1)
+                    if (Math.Abs(aiTableInfos[key].p - 1.0d) > DMIN)
                     {
                         key = aiInfo.jiang != -1 ? 1 : 0;
                         aiTableInfos[key].p += baseP * 1.0d / valid;
