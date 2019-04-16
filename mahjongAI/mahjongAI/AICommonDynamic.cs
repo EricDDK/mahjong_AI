@@ -57,7 +57,7 @@ namespace mahjongAI
                     {
                         List<int> tmp = new List<int>(input);
                         tmp.Remove(c);
-                        double score = calc(tmp, guiCard);
+                        double score = calc(tmp, guiCard, remainCards);
                         if (score > max)
                         {
                             max = score;
@@ -70,7 +70,7 @@ namespace mahjongAI
             return ret;
         }
 
-        public static bool chiAI(List<int> input, List<int> guiCard, int card, int card1, int card2)
+        public static bool chiAI(List<int> input, List<int> guiCard, int card, int card1, int card2, int[] remain)
         {
             if (guiCard.Contains(card) || guiCard.Contains(card1) || guiCard.Contains(card2))
             {
@@ -82,17 +82,17 @@ namespace mahjongAI
                 return false;
             }
 
-            double score = calc(input, guiCard);
+            double score = calc(input, guiCard, remain);
 
             List<int> tmp = new List<int>(input);
             tmp.Remove(card1);
             tmp.Remove(card2);
-            double scoreNew = calc(tmp, guiCard);
+            double scoreNew = calc(tmp, guiCard, remain);
 
             return scoreNew >= score;
         }
 
-        public static List<int> chiAI(List<int> input, List<int> guiCard, int card)
+        public static List<int> chiAI(List<int> input, List<int> guiCard, int card, int[] remain)
         {
             List<int> ret = new List<int>();
             if (guiCard.Contains(card))
@@ -100,7 +100,7 @@ namespace mahjongAI
                 return ret;
             }
 
-            double score = calc(input, guiCard);
+            double score = calc(input, guiCard, remain);
             double scoreNewMax = 0;
 
             int card1 = 0;
@@ -113,7 +113,7 @@ namespace mahjongAI
                 List<int> tmp = new List<int>(input);
                 tmp.Remove((int)(card - 2));
                 tmp.Remove((int)(card - 1));
-                double scoreNew = calc(tmp, guiCard);
+                double scoreNew = calc(tmp, guiCard, remain);
                 if (scoreNew > scoreNewMax)
                 {
                     scoreNewMax = scoreNew;
@@ -129,7 +129,7 @@ namespace mahjongAI
                 List<int> tmp = new List<int>(input);
                 tmp.Remove((int)(card - 1));
                 tmp.Remove((int)(card + 1));
-                double scoreNew = calc(tmp, guiCard);
+                double scoreNew = calc(tmp, guiCard, remain);
                 if (scoreNew > scoreNewMax)
                 {
                     scoreNewMax = scoreNew;
@@ -145,7 +145,7 @@ namespace mahjongAI
                 List<int> tmp = new List<int>(input);
                 tmp.Remove((int)(card + 1));
                 tmp.Remove((int)(card + 2));
-                double scoreNew = calc(tmp, guiCard);
+                double scoreNew = calc(tmp, guiCard, remain);
                 if (scoreNew > scoreNewMax)
                 {
                     scoreNewMax = scoreNew;
@@ -163,7 +163,7 @@ namespace mahjongAI
             return ret;
         }
 
-        public static bool pengAI(List<int> input, List<int> guiCard, int card, double award)
+        public static bool pengAI(List<int> input, List<int> guiCard, int card, double award, int[] remain)
         {
             if (guiCard.Contains(card))
             {
@@ -175,17 +175,17 @@ namespace mahjongAI
                 return false;
             }
 
-            double score = calc(input, guiCard);
+            double score = calc(input, guiCard, remain);
 
             List<int> tmp = new List<int>(input);
             tmp.Remove((int)card);
             tmp.Remove((int)card);
-            double scoreNew = calc(tmp, guiCard);
+            double scoreNew = calc(tmp, guiCard, remain);
 
             return scoreNew + award >= score;
         }
 
-        public static bool gangAI(List<int> input, List<int> guiCard, int card, double award)
+        public static bool gangAI(List<int> input, List<int> guiCard, int card, double award, int[] remain)
         {
             if (guiCard.Contains(card))
             {
@@ -197,19 +197,19 @@ namespace mahjongAI
                 return false;
             }
 
-            double score = calc(input, guiCard);
+            double score = calc(input, guiCard, remain);
 
             List<int> tmp = new List<int>(input);
             tmp.Remove((int)card);
             tmp.Remove((int)card);
             tmp.Remove((int)card);
             tmp.Remove((int)card);
-            double scoreNew = calc(tmp, guiCard);
+            double scoreNew = calc(tmp, guiCard, remain);
 
             return scoreNew + award >= score;
         }
 
-        public static double calc(List<int> input, List<int> guiCard)
+        public static double calc(List<int> input, List<int> guiCard, int[] remainCards)
         {
             List<int> cards = new List<int>();
             for (int i = 0; i < MaJiangDef.MAX_NUM; i++)
@@ -268,23 +268,29 @@ namespace mahjongAI
 
             AIProperty property;
             property.N = 9; property.baseP = 36.0d / 136; property.huLian = true;
+
             List<List<AITableInfo>> dynamicMaxPossible = new List<List<AITableInfo>>();
 
-            List<AITableInfo> dynamicWanAITableInfo = getAITable(wan_key, _everyNormalCards, property);
+            property.tileType = MaJiangDef.WAN1;
+            List<AITableInfo> dynamicWanAITableInfo = getAITable(wan_key, _everyNormalCards, property, remainCards);
             dynamicMaxPossible.Add(dynamicWanAITableInfo);
 
-            List<AITableInfo> dynamicTongAITableInfo = getAITable(tong_key, _everyNormalCards, property);
+            property.tileType = MaJiangDef.TONG1;
+            List<AITableInfo> dynamicTongAITableInfo = getAITable(tong_key, _everyNormalCards, property, remainCards);
             dynamicMaxPossible.Add(dynamicTongAITableInfo);
 
-            List<AITableInfo> dynamicTiaoAITableInfo = getAITable(tiao_key, _everyNormalCards, property);
+            property.tileType = MaJiangDef.TIAO1;
+            List<AITableInfo> dynamicTiaoAITableInfo = getAITable(tiao_key, _everyNormalCards, property, remainCards);
             dynamicMaxPossible.Add(dynamicTiaoAITableInfo);
 
             property.N = 4; property.baseP = 16.0d / 136; property.huLian = false;
-            List<AITableInfo> dynamicFengAITableInfo = getAITable(feng_key, _everyFengCards, property);
+            property.tileType = MaJiangDef.FENG_DONG;
+            List<AITableInfo> dynamicFengAITableInfo = getAITable(feng_key, _everyFengCards, property, remainCards);
             dynamicMaxPossible.Add(dynamicFengAITableInfo);
 
             property.N = 3; property.baseP = 12.0d / 136; property.huLian = false;
-            List<AITableInfo> dynamicJianAITableInfo = getAITable(jian_key, _everyJianCards, property);
+            property.tileType = MaJiangDef.JIAN_ZHONG;
+            List<AITableInfo> dynamicJianAITableInfo = getAITable(jian_key, _everyJianCards, property, remainCards);
             dynamicMaxPossible.Add(dynamicJianAITableInfo);
 
             List<double> ret = new List<double>();
@@ -328,7 +334,7 @@ namespace mahjongAI
             }
         }
 
-        public static List<AITableInfo> getAITable(long card, Dictionary<int, HashSet<long>> tmpcards, AIProperty property)
+        public static List<AITableInfo> getAITable(long card, Dictionary<int, HashSet<long>> tmpcards, AIProperty property, int[] remainCards)
         {
             int N = property.N;
             double baseP = property.baseP;
@@ -382,6 +388,10 @@ namespace mahjongAI
                     {
                         num[i] += tmpcnum[i];
                         if (num[i] > 4)
+                        {
+                            max = true;
+                        }
+                        if (tmpcnum[i] > remainCards[property.tileType + i])
                         {
                             max = true;
                         }
@@ -528,6 +538,7 @@ namespace mahjongAI
         public int N;
         public double baseP;
         public bool huLian;
+        public int tileType;
     }
 
 }

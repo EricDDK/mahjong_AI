@@ -308,7 +308,7 @@ namespace mahjongAI
             //    Console.WriteLine("[testOut] test failed ! ");
             //Console.WriteLine(MaJiangDef.cardToString(outRet));
 
-            cards = new List<int> { 8, 13, 18, 18, 19, 20, 24, 24, 27, 27, 29, 29, 30, 31 };
+            cards = new List<int> { 8, 13, 18, 18, 18, 20, 24, 24, 27, 27, 29, 29, 30, 31 };
             gui = new List<int> { 11 };
             //outRet = outAI(cards, gui, remain, bannedCards);
             outDynamicRet = AICommonDynamic.outAI(cards, gui, remain, bannedCards);
@@ -321,13 +321,20 @@ namespace mahjongAI
             string guiStr = "1万";
             List<int> cards = MaJiangDef.stringToCards(init);
             List<int> gui = MaJiangDef.stringToCards(guiStr);
+            int[] remain = new int[43] { 0,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4,
+                4, 4, 4,
+                1, 1, 1, 1, 1, 1, 1, 1};
             bool canChi = chiAI(cards, gui, MaJiangDef.stringToCard("3筒"), MaJiangDef.stringToCard("2筒"), MaJiangDef.stringToCard("4筒"));
-            bool canDynamicChi = AICommonDynamic.chiAI(cards, gui, MaJiangDef.stringToCard("3筒"), MaJiangDef.stringToCard("2筒"), MaJiangDef.stringToCard("4筒"));
+            bool canDynamicChi = AICommonDynamic.chiAI(cards, gui, MaJiangDef.stringToCard("3筒"), MaJiangDef.stringToCard("2筒"), MaJiangDef.stringToCard("4筒"), remain);
             if (canChi != canDynamicChi)
                 Console.WriteLine("[testChi] test failed 1 ! ");
             Console.WriteLine(string.Format("[testChi] canPeng = {0}", canChi));
             List<int> chiCards = chiAI(cards, gui, MaJiangDef.stringToCard("3筒"));
-            List<int> dynamicChiCards = chiAI(cards, gui, MaJiangDef.stringToCard("3筒"));
+            List<int> dynamicChiCards = AICommonDynamic.chiAI(cards, gui, MaJiangDef.stringToCard("3筒"), remain);
             if (chiCards.Count != dynamicChiCards.Count)
                 Console.WriteLine("[testChi] test failed 3 ! ");
             for (int i = 0; i < chiCards.Count; ++i)
@@ -344,8 +351,15 @@ namespace mahjongAI
             string guiStr = "1万";
             List<int> cards = MaJiangDef.stringToCards(init);
             List<int> gui = MaJiangDef.stringToCards(guiStr);
+            int[] remain = new int[43] { 0,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4,
+                4, 4, 4,
+                1, 1, 1, 1, 1, 1, 1, 1};
             bool canPeng = pengAI(cards, gui, MaJiangDef.stringToCard("2万"), 0.0d);
-            bool canDynamicPeng = AICommonDynamic.pengAI(cards, gui, MaJiangDef.stringToCard("2万"), 0.0d);
+            bool canDynamicPeng = AICommonDynamic.pengAI(cards, gui, MaJiangDef.stringToCard("2万"), 0.0d, remain);
             if (canPeng != canDynamicPeng)
                 Console.WriteLine("[testPeng] test failed ! ");
             Console.WriteLine(string.Format("[testPeng] canPeng = {0}", canPeng));
@@ -357,10 +371,22 @@ namespace mahjongAI
             string guiStr = "1万";
             List<int> cards = MaJiangDef.stringToCards(init);
             List<int> gui = MaJiangDef.stringToCards(guiStr);
+            int[] remain = new int[43] { 0,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4, 4, 4, 4, 4, 4,
+                4, 4, 4, 4,
+                4, 4, 4,
+                1, 1, 1, 1, 1, 1, 1, 1};
             bool canGang = gangAI(cards, gui, MaJiangDef.stringToCard("2万"), 1.0d);
-            bool canDynamicPeng = AICommonDynamic.gangAI(cards, gui, MaJiangDef.stringToCard("2万"), 1.0d);
+            bool canDynamicPeng = AICommonDynamic.gangAI(cards, gui, MaJiangDef.stringToCard("2万"), 1.0d, remain);
             if (canGang != canDynamicPeng)
                 Console.WriteLine("[testGang] test failed ! ");
+
+            cards = new List<int> { 6, 8, 9, 11, 12, 13, 19, 20, 21, 25, 25 };
+            gui = new List<int> { 23 };
+            canGang = gangAI(cards, gui, 21, 1.0d);
+            canDynamicPeng = AICommonDynamic.gangAI(cards, gui, 21, 1.0d, remain);
             Console.WriteLine(string.Format("[testGang] canGang = {0}", canGang));
         }
 
